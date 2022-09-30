@@ -10,7 +10,7 @@ This work was developed by Nuno Gomes, Matilde Pato and André Lourenço from In
 
 ## Pre Requisities
 
--Python 3.8
--An IDE running python (in my case PyCharm)
+- Python 3.8
+- An IDE running python (in my case PyCharm)
 
 ## Organization
