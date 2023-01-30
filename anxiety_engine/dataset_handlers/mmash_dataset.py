@@ -100,7 +100,7 @@ class MmashDatasetOper:
         return titles_arr, result_arr
 
     @staticmethod
-    def removeDatasetArrayNan(dataset_array: ndarray) -> ndarray:
+    def remove_dataset_array_nan(dataset_array: ndarray) -> ndarray:
 
         indexes_to_remove = []
 
@@ -122,7 +122,7 @@ class MmashDatasetOper:
         return_list: List[List] = []
         for dataset_entry in dataset_array:
             title_arr, values_arr = MmashDatasetOper.normalize_mmash_array(dataset_entry)
-            if remove_nans: values_arr = MmashDatasetOper.removeDatasetArrayNan(values_arr)
+            if remove_nans: values_arr = MmashDatasetOper.remove_dataset_array_nan(values_arr)
             return_list.append([title_arr, values_arr])
 
         return return_list
@@ -208,7 +208,7 @@ class MmashDatasetOper:
         return [dataset_rr_entry[0], dataset_rr_entry[1][indexes_to_keep]]
 
     @staticmethod
-    def datasetArrayToDict(dataset_titles: array, dataset_array: ndarray) -> Dict[str, ndarray]:
+    def dataset_array_to_dict(dataset_titles: array, dataset_array: ndarray) -> Dict[str, ndarray]:
         dataset_float_dict: Dict[str, ndarray] = {}
 
         for entryIndex in range(len(dataset_titles)):
@@ -222,26 +222,26 @@ class MmashDatasetOper:
 
     @staticmethod
     def generate_features_dictionaries(dataset_arrays: [ndarray]) -> (Dict[str, ndarray], List):
-        datasetFeaturesDict = []
-        datasetResultsDict: Dict[str, List] = {'ibi': [], 'gender': [], 'ibi_time': []}
-        datasetLabels: List = []
+        dataset_features_dict = []
+        dataset_results_dict: Dict[str, List] = {'ibi': [], 'gender': [], 'ibi_time': []}
+        dataset_labels: List = []
         for dataset_entry in dataset_arrays:
-            datasetFeaturesDict.append(MmashDatasetOper.datasetArrayToDict(dataset_entry[0], dataset_entry[1]))
+            dataset_features_dict.append(MmashDatasetOper.dataset_array_to_dict(dataset_entry[0], dataset_entry[1]))
 
         final_index = 0;
-        for i in range(np.min(datasetFeaturesDict[1]['day']).__int__(),
-                       np.max(datasetFeaturesDict[1]['day'] + 1).__int__()):
+        for i in range(np.min(dataset_features_dict[1]['day']).__int__(),
+                       np.max(dataset_features_dict[1]['day'] + 1).__int__()):
             initial_index = final_index
-            split_index = np.count_nonzero(datasetFeaturesDict[1]['day'] == i)
+            split_index = np.count_nonzero(dataset_features_dict[1]['day'] == i)
             final_index = initial_index + split_index
-            datasetResultsDict['ibi'].append(datasetFeaturesDict[1]['ibi_s'][initial_index: final_index])
-            datasetResultsDict['ibi_time'].append(
-                datasetFeaturesDict[1]['time'][initial_index: initial_index + split_index])
-            datasetLabels.append([datasetFeaturesDict[3][('stai%i' % i)][0]])
+            dataset_results_dict['ibi'].append(dataset_features_dict[1]['ibi_s'][initial_index: final_index])
+            dataset_results_dict['ibi_time'].append(
+                dataset_features_dict[1]['time'][initial_index: initial_index + split_index])
+            dataset_labels.append([dataset_features_dict[3][('stai%i' % i)][0]])
 
-        datasetResultsDict['gender'].append(datasetFeaturesDict[2]['gender'][0])
+        dataset_results_dict['gender'].append(dataset_features_dict[2]['gender'][0])
 
-        return datasetResultsDict, datasetLabels
+        return dataset_results_dict, dataset_labels
 
     # Mapping anxiety labels from MMASH
     @staticmethod

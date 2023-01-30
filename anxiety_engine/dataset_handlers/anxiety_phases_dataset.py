@@ -86,8 +86,8 @@ class AnxietyPhasesDatasetOper:
 
     @staticmethod
     def create_common_dataset_entry(anxiety_data_entry: AnxietyPhasesDatasetEntry, reduce_labels:bool, label_name: str) -> CommonDatasetEntry:
-        genderIndex = np.where(anxiety_data_entry.participant_details[0] == 'Gender')[0][0]
-        ageIndex = np.where(anxiety_data_entry.participant_details[0] == 'Age')[0][0]
+        gender_index = np.where(anxiety_data_entry.participant_details[0] == 'Gender')[0][0]
+        age_index = np.where(anxiety_data_entry.participant_details[0] == 'Age')[0][0]
         anxiety_index = np.where(anxiety_data_entry.participant_details[0] == label_name)[0][0]
 
         anxiety_label = int(anxiety_data_entry.participant_details[1][anxiety_index])
@@ -101,8 +101,8 @@ class AnxietyPhasesDatasetOper:
         patient_common_entry: CommonDatasetEntry = CommonDatasetEntry(
             timeline= timeline_arr,
             rr= anxiety_data_entry.rr[:, 1] ,
-            user_age=int(anxiety_data_entry.participant_details[1][ageIndex].split('-')[0]),
-            user_gender=np.where(anxiety_data_entry.participant_details[1][genderIndex]=='M', 0,1).max(),
+            user_age=int(anxiety_data_entry.participant_details[1][age_index].split('-')[0]),
+            user_gender=np.where(anxiety_data_entry.participant_details[1][gender_index]=='M', 0,1).max(),
             questionnaire=anxiety_label
         )
 

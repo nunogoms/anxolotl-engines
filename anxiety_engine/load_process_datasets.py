@@ -1,3 +1,4 @@
+import os
 from os import cpu_count
 
 import numpy as np
@@ -9,12 +10,32 @@ from dataset_handlers.anxiety_phases_dataset import AnxietyPhasesDatasetOper
 from dataset_handlers.common_dataset_entry import CommonDatasetEntry
 from dataset_handlers.mmash_dataset import MmashDatasetOper
 from processed_data.hrv_analysis_oper import HrvAnalysisOper
+from dotenv import load_dotenv
 
-MMASH_DATASET_PATH: str = "../datasets/MMASH/DataPaper"
-ANXTIETY_PHASES_DATASET_PATH: str = "../datasets/AnxietyPhasesDataset"
+from utils import paths
+
+######      LOADING ENVIRONMENT CONFIGS      ######
+load_dotenv(dotenv_path=f"{paths.get_project_root()}/{paths.MAIN_CONFIG_PATH}")
+
+test = os.environ.get("INPUT_FEATURES_VALUES_NAME")
+
+# Train models information
+
+save_train_model_flag_env = os.environ.get("SAVE_TRAINED_MODELS_FLAG").lower() == "true"
+train_model_filename_env = os.environ.get("TRAINED_MODEL_FILENAME")
+train_model_storage_path = os.environ.get("TRAINED_MODELS_STORAGE_PATH")
+
+# Features array information
+
+input_features_array_path = os.environ.get("INPUT_FEATURES_ARRAY_PATH")
+input_features_values_filename = os.environ.get("INPUT_FEATURES_VALUES_FILENAME")
+input_features_labels_filename = os.environ.get("INPUT_FEATURES_LABELS_FILENAME")
+
+MMASH_DATASET_PATH: str = "../datasets/MMASH"
+ANXIETY_PHASES_DATASET_PATH: str = "../datasets/AnxietyPhasesDataset"
 
 mmash_dataset_load = MmashDatasetOper(MMASH_DATASET_PATH)
-anxiety_phases_dataset_oper = AnxietyPhasesDatasetOper(ANXTIETY_PHASES_DATASET_PATH)
+anxiety_phases_dataset_oper = AnxietyPhasesDatasetOper(ANXIETY_PHASES_DATASET_PATH)
 
 
 features_list = []
@@ -38,16 +59,15 @@ for dataset_entry in common_dataset_entry_list :
         np.percentile(dataset_entry.rr, q=80) - np.percentile(
             dataset_entry.rr, q=20)
     ]
-    resultsArr.extend(HrvAnalysisOper.getMaxHour(dataset_entry.rr,
-                                                 dataset_entry.timeline,
-                                                 time_between_samples= time_between_samples_in_seconds,
-                                                 completeness_percentage=0.65))
+    resultsArr.extend(HrvAnalysisOper.get_max_hour(dataset_entry.rr,
+                                                   dataset_entry.timeline,
+                                                   time_between_samples= time_between_samples_in_seconds,
+                                                   completeness_percentage=0.65))
 
 
     features_list.append(resultsArr)
     labels_list.append(dataset_entry.anxiety_label)
 
-# minmax NO GOOD
 #scaler = MinMaxScaler(feature_range=(-1, 1))
 scaler = StandardScaler()
 features_list = scaler.fit_transform(features_list)

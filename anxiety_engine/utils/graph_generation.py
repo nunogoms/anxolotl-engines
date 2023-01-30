@@ -13,24 +13,24 @@ labelsDataPath = "processed_data/data/allsets_%dsec_labels.csv"
 fileTime = 30
 
 def main_function():
-    printCircularClassDistribution()
+    print_circular_class_distribution()
     exit(1)
     #printClassDistribution()
     #printAllFeatureImportance()
 
 
-    titlesArr = ["gender","age","mean_rr","variability_rr","90th_rr","10th_rr","85th-15th_rr"]
-    titlesArr.extend(hrvanalysis.get_time_domain_features([230,450]).keys())
-    titlesArr.extend(hrvanalysis.get_frequency_domain_features([230, 450]).keys())
-    titlesArr.extend(hrvanalysis.get_poincare_plot_features([230, 450]).keys())
+    titles_arr = ["gender","age","mean_rr","variability_rr","90th_rr","10th_rr","85th-15th_rr"]
+    titles_arr.extend(hrvanalysis.get_time_domain_features([230,450]).keys())
+    titles_arr.extend(hrvanalysis.get_frequency_domain_features([230, 450]).keys())
+    titles_arr.extend(hrvanalysis.get_poincare_plot_features([230, 450]).keys())
 
 
-    print(titlesArr.__str__())
+    print(titles_arr.__str__())
 
 
-def printAllFeatureImportance():
+def print_all_feature_importance():
 
-    importancesDict ={}
+    importances_dict ={}
 
     for time in possibleFrequencyValues:
 
@@ -43,13 +43,13 @@ def printAllFeatureImportance():
         total_importance = 0
         for v in score:
             total_importance += v
-        importancesDict[time]= total_importance
+        importances_dict[time]= total_importance
 
 
-    fig = plt.figure(figsize=(10, len(importancesDict.keys())))
+    fig = plt.figure(figsize=(10, len(importances_dict.keys())))
 
     # creating the bar plot
-    plt.bar(importancesDict.keys(), importancesDict.values(),
+    plt.bar(importances_dict.keys(), importances_dict.values(),
             width=2)
 
     plt.xlabel("Time between samples in seconds")
@@ -58,12 +58,12 @@ def printAllFeatureImportance():
 
     plt.show()
 
-def printClassDistribution():
+def print_class_distribution():
     # create a dataset
 
     original_labels_list = genfromtxt(labelsDataPath % fileTime, delimiter=',', dtype=None, encoding='utf-8')
 
-    classesSizes = [
+    classes_sizes = [
         len(np.where(original_labels_list == 0)[0]),
             len(np.where(original_labels_list == 1)[0]),
             len(np.where(original_labels_list == 2)[0])
@@ -73,7 +73,7 @@ def printClassDistribution():
 
     # Create bars with different colors
     fig,ax = plt.subplots()
-    plt.bar(bars, classesSizes,
+    plt.bar(bars, classes_sizes,
             color=['blue', 'yellow', 'orange'])
 
     plt.xlabel("Class")
@@ -86,11 +86,11 @@ def printClassDistribution():
     # Show graph
     plt.show()
 
-def printCircularClassDistribution():
+def print_circular_class_distribution():
     # create a dataset
     original_labels_list = genfromtxt(labelsDataPath % fileTime, delimiter=',', dtype=None, encoding='utf-8')
 
-    classesSizes = np.asarray([
+    classes_sizes = np.asarray([
         len(np.where(original_labels_list == 0)[0]),
             len(np.where(original_labels_list == 1)[0]),
             len(np.where(original_labels_list == 2)[0])
@@ -101,7 +101,7 @@ def printCircularClassDistribution():
     # Create bars with different colors
     fig,ax = plt.subplots()
 
-    plt.pie(classesSizes, labels=label_names, colors=['blue', 'yellow', 'orange'])
+    plt.pie(classes_sizes, labels=label_names, colors=['blue', 'yellow', 'orange'])
     #plt.title("Label Class Distribution")
 
     for label_names in ax.containers:
@@ -111,9 +111,9 @@ def printCircularClassDistribution():
     plt.show()
 
 
-def printClassValues():
+def print_class_values():
 
-    importancesDict ={}
+    importances_dict ={}
 
     for time in possibleFrequencyValues:
 
@@ -126,13 +126,13 @@ def printClassValues():
         total_importance = 0
         for v in score:
             total_importance += v
-        importancesDict[time]= total_importance
+        importances_dict[time]= total_importance
 
 
-    fig = plt.figure(figsize=(10, len(importancesDict.keys())))
+    fig = plt.figure(figsize=(10, len(importances_dict.keys())))
 
     # creating the bar plot
-    plt.bar(importancesDict.keys(), importancesDict.values(),
+    plt.bar(importances_dict.keys(), importances_dict.values(),
             width=2)
 
     plt.xlabel("Time between samples in seconds")

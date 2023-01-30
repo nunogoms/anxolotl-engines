@@ -37,7 +37,7 @@ class Logger:
         print()
 
     @staticmethod
-    def logAvgPredictionMetrics(accuracy, f1Score):
+    def log_avg_prediction_metrics(accuracy, f1score):
         # Accuracy = TP+TN/TP+FP+FN+TN - accuracy
         # Recall = TP/TP+FN - true positive ratio
         # Precision = TP/TP+FP - all positive ratio
@@ -50,11 +50,11 @@ class Logger:
 
         print(f"accuracy : {accuracy.__str__()}")
         # Micro is more accurate, since the class distributions are not equal, as explained in the challenge
-        print(f"f1 score : {f1Score.__str__()}")
+        print(f"f1 score : {f1score.__str__()}")
         print("\n")
 
     @staticmethod
-    def logClassifer(clf):
+    def log_classifier(clf):
         print("\n")
         print("######################################")
         print("########### CLASSIFIER INFO ##########")
@@ -67,61 +67,61 @@ class Logger:
         print()
 
     @staticmethod
-    def logWorkDuration(startTime, endTime):
+    def log_work_duration(start_time, end_time):
         print("\n")
         print("######################################")
         print("######### WORK DURATION INFO #########")
         print("######################################\n")
-        print(f"started : {startTime.__str__()}")
+        print(f"started : {start_time.__str__()}")
         # Micro is more accurate, since the class distributions are not equal, as explained in the challenge
-        print(f"ended : {endTime.__str__()}")
-        print(f"duration : {endTime.__sub__(startTime).__str__()}")
+        print(f"ended : {end_time.__str__()}")
+        print(f"duration : {end_time.__sub__(start_time).__str__()}")
         print()
 
 
 class FeatureLogger :
     @staticmethod
-    def logFeatureRankings(processedFeatures, labels):
+    def log_feature_rankings(processed_features, labels):
         # Feature extraction
         model = LogisticRegression()
         rfe = RFE(model)
-        fit = rfe.fit(processedFeatures, labels)
+        fit = rfe.fit(processed_features, labels)
         print("Num Features: %s" % (fit.n_features_))
         print("Selected Features: %s" % (fit.support_))
         print("Feature Ranking: %s" % fit.ranking_)
 
     @staticmethod
-    def logLabelCorrelation(processedFeatures, labels):
+    def log_label_correlation(processed_features, labels):
         # Feature extraction
         ridge = Ridge(alpha=0.00001)
-        ridge.fit(processedFeatures, labels)
+        ridge.fit(processed_features, labels)
         Ridge(alpha=1.0, copy_X=True, fit_intercept=True, max_iter=None,
               normalize=False, random_state=None, solver='auto', tol=0.001)
 
         print("\n\nRidge model:\n", FeatureLogger._pretty_print_coefs(ridge.coef_))
 
     @staticmethod
-    def logFeaturesCorrelation(processedFeatures,algorithm='pearson'):
-        reversedTrainDataset = dict()
-        for trainArrIndex in range(len(processedFeatures)):
-            for featureTrainArrIndex in range(len(processedFeatures[trainArrIndex])):
-                colName = 'f' + featureTrainArrIndex.__str__()
-                if colName not in reversedTrainDataset: reversedTrainDataset[colName] = []
-                reversedTrainDataset[colName].append(processedFeatures[trainArrIndex][featureTrainArrIndex])
+    def log_features_correlation(processed_features, algorithm='pearson'):
+        reversed_train_dataset = dict()
+        for trainArrIndex in range(len(processed_features)):
+            for featureTrainArrIndex in range(len(processed_features[trainArrIndex])):
+                col_name = 'f' + featureTrainArrIndex.__str__()
+                if col_name not in reversed_train_dataset: reversed_train_dataset[col_name] = []
+                reversed_train_dataset[col_name].append(processed_features[trainArrIndex][featureTrainArrIndex])
 
-        xyz = pd.DataFrame(reversedTrainDataset)
+        xyz = pd.DataFrame(reversed_train_dataset)
 
-        corrMatrix = xyz.corr(method=algorithm).round(decimals=2)
+        corr_matrix = xyz.corr(method=algorithm).round(decimals=2)
 
-        print(corrMatrix)
+        print(corr_matrix)
 
-    def logFeaturesImportance(filteredDataset,filteredDatasetLabels):
+    def log_features_importance(filteredDataset, filteredDatasetLabels):
         # define the model
-        importanceModel = DecisionTreeRegressor()
+        importance_model = DecisionTreeRegressor()
         # fit the model
-        importanceModel.fit(filteredDataset, filteredDatasetLabels)
+        importance_model.fit(filteredDataset, filteredDatasetLabels)
         # get importance
-        importance = importanceModel.feature_importances_
+        importance = importance_model.feature_importances_
         importance = np.sort(importance)
         # summarize feature importance
         for i, v in enumerate(importance):
@@ -131,7 +131,7 @@ class FeatureLogger :
     # A helper method for pretty-printing the coefficients
     @staticmethod
     def _pretty_print_coefs(coefs, names=None, sort=False):
-        if names == None:
+        if names is None:
             names = ["X%s" % x for x in range(len(coefs))]
         lst = zip(coefs, names)
         if sort:

@@ -7,7 +7,7 @@ import numpy as np
 class HrvAnalysisOper:
 
     @staticmethod
-    def getMaxHour(ibi_list: List, ibi_time_list: List,time_between_samples: int, completeness_percentage:float):
+    def get_max_hour(ibi_list: List, ibi_time_list: List, time_between_samples: int, completeness_percentage:float):
         min_hrv_freq = 0
 
         best_time_domain_features = None
@@ -40,16 +40,16 @@ class HrvAnalysisOper:
 
     @staticmethod
     def _join_hrv_features(time_domain_features: Dict, frequency_domain_features: Dict, poincare_plot_features: Dict):
-        resultsArr = []
+        results_arr = []
 
-        for entry in time_domain_features.values(): resultsArr.append(entry)
-        for entry in frequency_domain_features.values(): resultsArr.append(entry)
-        for entry in poincare_plot_features.values(): resultsArr.append(entry)
+        for entry in time_domain_features.values(): results_arr.append(entry)
+        for entry in frequency_domain_features.values(): results_arr.append(entry)
+        for entry in poincare_plot_features.values(): results_arr.append(entry)
 
-        return resultsArr
+        return results_arr
 
     @staticmethod
-    def getHrvAnalysisFeatures(ibi_list: List):
+    def get_hrv_analysis_features(ibi_list: List):
         time_domain_features = hrva.get_time_domain_features(ibi_list)
         frequency_domain_features = hrva.get_frequency_domain_features(ibi_list)
         poincare_plot_features = hrva.get_poincare_plot_features(ibi_list)
