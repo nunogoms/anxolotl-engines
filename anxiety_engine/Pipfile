@@ -1,0 +1,20 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+joblib = "~=1.2.0"
+numpy = "~=1.24.1"
+mlxtend = "~=0.21.0"
+hrv-analysis = "~=1.0"
+imblearn = "~=0.0"
+sklearn2pmml = "~=0.90"
+xgboost = "~=1.7.3"
+python-dotenv = "~=0.21"
+scikit-learn = "~=1.2.1"
+
+[dev-packages]
+
+[requires]
+python_version = "3.8"
