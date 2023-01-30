@@ -118,11 +118,9 @@ class AnxietyPhasesDatasetOper:
         label_name: str = ""
         if selected_task == 0 :
             task_to_read = "speaking_task"
-            #label_name = "Speech_Anxiety_Score"
             label_name = "Speech_SUDS"
         elif selected_task == 1 :
             task_to_read = "bug_box_task"
-            #label_name = "Bug_Anxiety_Score"
             label_name = "BugBox_Preparation_SUDS"
 
 

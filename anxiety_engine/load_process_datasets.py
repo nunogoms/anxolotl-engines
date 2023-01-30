@@ -15,38 +15,34 @@ from dotenv import load_dotenv
 from utils import paths
 
 ######      LOADING ENVIRONMENT CONFIGS      ######
-load_dotenv(dotenv_path=f"{paths.get_project_root()}/{paths.MAIN_CONFIG_PATH}")
-
-test = os.environ.get("INPUT_FEATURES_VALUES_NAME")
+load_dotenv(dotenv_path=f"{paths.get_project_root()}/{paths.LOADER_CONFIG_PATH}")
 
 # Train models information
 
-save_train_model_flag_env = os.environ.get("SAVE_TRAINED_MODELS_FLAG").lower() == "true"
 train_model_filename_env = os.environ.get("TRAINED_MODEL_FILENAME")
 train_model_storage_path = os.environ.get("TRAINED_MODELS_STORAGE_PATH")
 
 # Features array information
 
-input_features_array_path = os.environ.get("INPUT_FEATURES_ARRAY_PATH")
-input_features_values_filename = os.environ.get("INPUT_FEATURES_VALUES_FILENAME")
-input_features_labels_filename = os.environ.get("INPUT_FEATURES_LABELS_FILENAME")
+output_features_array_path = os.environ.get("OUTPUT_FEATURES_ARRAY_PATH")
 
-MMASH_DATASET_PATH: str = "../datasets/MMASH"
-ANXIETY_PHASES_DATASET_PATH: str = "../datasets/AnxietyPhasesDataset"
+MMASH_DATASET_PATH: str = os.environ.get("MMASH_DATASET_PATH")
+ANXIETY_PHASES_DATASET_PATH: str = os.environ.get("ANXIETY_PHASES_DATASET")
 
-mmash_dataset_load = MmashDatasetOper(MMASH_DATASET_PATH)
-anxiety_phases_dataset_oper = AnxietyPhasesDatasetOper(ANXIETY_PHASES_DATASET_PATH)
+time_between_samples_in_seconds: int =  int(os.environ.get("TIME_BETWEEN_SAMPLES_IN_SECONDS_TO_RESAMPLE"))
+completeness_percentage_for_measures: float = float(os.environ.get("COMPLETENESS_PERCENTAGE_OF_MEASURES_PER_HOUR"))
+
+mmash_dataset = MmashDatasetOper(MMASH_DATASET_PATH)
+anxiety_phases_dataset = AnxietyPhasesDatasetOper(ANXIETY_PHASES_DATASET_PATH)
 
 
 features_list = []
 labels_list = []
 
-time_between_samples_in_seconds = 30
-
 common_dataset_entry_list :List[CommonDatasetEntry]= []
-common_dataset_entry_list.extend(anxiety_phases_dataset_oper.retrieve_features_and_labels(reduce_labels=True,selected_task=0,time_between_samples=time_between_samples_in_seconds))
-common_dataset_entry_list.extend(anxiety_phases_dataset_oper.retrieve_features_and_labels(reduce_labels=True,selected_task=1,time_between_samples=time_between_samples_in_seconds))
-common_dataset_entry_list.extend(mmash_dataset_load.retrieve_features_and_labels(reduce_labels=True,last_user=23, time_between_samples = time_between_samples_in_seconds))
+common_dataset_entry_list.extend(anxiety_phases_dataset.retrieve_features_and_labels(reduce_labels=True, selected_task=0, time_between_samples=time_between_samples_in_seconds))
+common_dataset_entry_list.extend(anxiety_phases_dataset.retrieve_features_and_labels(reduce_labels=True, selected_task=1, time_between_samples=time_between_samples_in_seconds))
+common_dataset_entry_list.extend(mmash_dataset.retrieve_features_and_labels(reduce_labels=True, last_user=23, time_between_samples = time_between_samples_in_seconds))
 
 for dataset_entry in common_dataset_entry_list :
     resultsArr: List = [
@@ -62,7 +58,7 @@ for dataset_entry in common_dataset_entry_list :
     resultsArr.extend(HrvAnalysisOper.get_max_hour(dataset_entry.rr,
                                                    dataset_entry.timeline,
                                                    time_between_samples= time_between_samples_in_seconds,
-                                                   completeness_percentage=0.65))
+                                                   completeness_percentage=completeness_percentage_for_measures))
 
 
     features_list.append(resultsArr)
@@ -73,5 +69,5 @@ scaler = StandardScaler()
 features_list = scaler.fit_transform(features_list)
 
 #Save files
-np.savetxt("processed_data/allsets_" + time_between_samples_in_seconds.__str__() +"sec_final_labels.csv", labels_list, delimiter=",")
-np.savetxt("processed_data/allsets_" + time_between_samples_in_seconds.__str__() +"sec_final_features.csv", features_list, delimiter=",")
+np.savetxt(f"{output_features_array_path}/dataset_{time_between_samples_in_seconds}sec_labels.csv", labels_list, delimiter=",")
+np.savetxt(f"{output_features_array_path}/dataset_{time_between_samples_in_seconds}sec_features.csv", features_list, delimiter=",")
