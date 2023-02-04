@@ -1,10 +1,9 @@
 import os
-from os import cpu_count
 
 import numpy as np
-from typing import List
+import typing
 
-from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import sklearn.preprocessing
 
 from dataset_handlers.anxiety_phases_dataset import AnxietyPhasesDatasetOper
 from dataset_handlers.common_dataset_entry import CommonDatasetEntry
@@ -39,13 +38,13 @@ anxiety_phases_dataset = AnxietyPhasesDatasetOper(ANXIETY_PHASES_DATASET_PATH)
 features_list = []
 labels_list = []
 
-common_dataset_entry_list :List[CommonDatasetEntry]= []
+common_dataset_entry_list :typing.List[CommonDatasetEntry]= []
 common_dataset_entry_list.extend(anxiety_phases_dataset.retrieve_features_and_labels(reduce_labels=True, selected_task=0, time_between_samples=time_between_samples_in_seconds))
 common_dataset_entry_list.extend(anxiety_phases_dataset.retrieve_features_and_labels(reduce_labels=True, selected_task=1, time_between_samples=time_between_samples_in_seconds))
 common_dataset_entry_list.extend(mmash_dataset.retrieve_features_and_labels(reduce_labels=True, last_user=23, time_between_samples = time_between_samples_in_seconds))
 
 for dataset_entry in common_dataset_entry_list :
-    resultsArr: List = [
+    resultsArr: typing.List = [
         dataset_entry.user_gender,  # gender
         dataset_entry.user_age,
         np.mean(dataset_entry.rr),
@@ -65,7 +64,7 @@ for dataset_entry in common_dataset_entry_list :
     labels_list.append(dataset_entry.anxiety_label)
 
 #scaler = MinMaxScaler(feature_range=(-1, 1))
-scaler = StandardScaler()
+scaler = sklearn.preprocessing.StandardScaler()
 features_list = scaler.fit_transform(features_list)
 
 #Save files
