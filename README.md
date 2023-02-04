@@ -1,44 +1,56 @@
 # Anxolotl-engines
+
+## Intro
+
+This repository contains two machine learning algorithms focused on mental health metrics
+preloaded and with all the parameters already chosen. The current available parts are:
+
+- [Anxiety Engine](anxiety_engine): The machine learning algorithm to classify anxiety state,
+  distinguishing between 3 levels.
+- [Panic Engine](panic_engine): The machine learning algorithm to distinguish between panic states (Non-Panic and panic)
+- [Datasets](datasets): Contains small versions of the datasets, as well as information on how to
+  download the full version.
+
 ## Origin
 
 This work is part of the Anxolotl System and thesis by the name of
-Anxolotl - An Anxiety Companion App thesis
+Anxolotl - An Anxiety Companion App. It was developed at Instituto Superior de Engenharia
+de Lisboa, Instituto Politécnico de Lisboa in Portugal. 
 
+The work here available makes part of a full distributed system intended to detect mental
+health metrics. These algorithms pertain to the detection sector of the work, and are here
+available for further development. 
 
-# Instructions
+# Setup
+
+his document describes how to setup all the dependencies to run the notebooks in this
+repository in following platforms:
+
+- Linux
 
 ## Pre Requisities
 
-- Python 3.8
-- An IDE running python (in my case PyCharm)
+All the necessary steps to run each engine are included in each folder. 
 
-## Organization
-
-This directory is divided into three sections :
-
-- datasets : Contains information about retrieving the used datasets
-- panic_engine : The machine learning algorithm to distinguish between panic states (Non-Panic and panic)
-- anxiety_engine : The machine learning algorithm to classify anxiety state from 3 levels
-
-### Anxiety and Panic Engine folder hierarchy
-
-Both of these folders contain identic organizations
-- dataset_handlers : Files pertaining the loading and filtering of each specific dataset
-- processed_data : Contains a python file with a data processor and a folder **processed_data/data** which contains already processed datasets.
-- utils : Graph generation utility code and Logger
-- main.py : The entrypoint of the machine learning algorithm
-- load_proccess_dataset.py : The entry point to load the original datasets and create filtered datasets compatible with the engines
+- [Pyenv](https://github.com/pyenv/pyenv)
+- [Pipenv](https://pipenv.pypa.io/en/latest/)
+- [OPTIONAL] An IDE running python (I use [PyCharm](https://www.jetbrains.com/pycharm/))
+- Terminal can also be used
 
 ## Contacts
+Please feel free to contact me for any questions or cooperation opportunities. I'd be
+happy to help.
 
-- Email : [gomes.nunoms@gmail.com](<a href="mailto:gomes.nunoms@gmail.com"></a>)
+- Email : [gomes.nunoms@gmail.com](mailto:gomes.nunoms@gmail.com)
 - Github : [nunogoms](https://github.com/nunogoms)
 - Linkedin : [Nuno Gomes](https://www.linkedin.com/in/nuno-g-7734291a5/)
+- Research Gate : [Nuno Gomes](https://www.linkedin.com/in/nuno-g-7734291a5/)
 
 ## Citation
 
-If you find this repository useful in your research, please cite this article as
+Paper to be published soon.
 
+<!---
 ```
 @article{
 YANG2020295,
@@ -53,5 +65,6 @@ doi = "https://doi.org/10.1016/j.neucom.2020.07.061",
 url = "http://www.sciencedirect.com/science/article/pii/S0925231220311693"
 }
 ```
+-->
 
 
