@@ -148,8 +148,8 @@ kfold_predicted_labels = pipe.predict(x_test[:, best_features])
 print(classification_report(kfold_test_dataset_labels, kfold_predicted_labels,
                             digits=4))
 
-testAcc = accuracy_score(y_true=kfold_test_dataset_labels,
-                         y_pred=kfold_predicted_labels)
-print("testAcc " + testAcc.__str__())
+test_acc = accuracy_score(y_true=kfold_test_dataset_labels,
+                          y_pred=kfold_predicted_labels)
+print("testAcc " + test_acc.__str__())
 
 save_models(pipe, save = save_train_model_flag_env)

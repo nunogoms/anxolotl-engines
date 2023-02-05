@@ -12,7 +12,7 @@ class Logger:
 
     # Let's explore the contents of the dataset directory
     @staticmethod
-    def logPredictionMetrics(expected_labels, predicted_labels):
+    def log_prediction_metrics(expected_labels, predicted_labels):
         # Accuracy = TP+TN/TP+FP+FN+TN - accuracy
         # Recall = TP/TP+FN - true positive ratio
         # Precision = TP/TP+FP - all positive ratio
@@ -115,11 +115,11 @@ class FeatureLogger :
 
         print(corr_matrix)
 
-    def log_features_importance(filteredDataset, filteredDatasetLabels):
+    def log_features_importance(filtered_dataset, filtered_dataset_labels):
         # define the model
         importance_model = DecisionTreeRegressor()
         # fit the model
-        importance_model.fit(filteredDataset, filteredDatasetLabels)
+        importance_model.fit(filtered_dataset, filtered_dataset_labels)
         # get importance
         importance = importance_model.feature_importances_
         importance = np.sort(importance)

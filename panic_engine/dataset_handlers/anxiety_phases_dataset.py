@@ -37,10 +37,10 @@ class AnxietyPhasesDatasetOper:
     def load_patient_data(dataset_path: str, task_name: str, patient_name: str) -> AnxietyPhasesDatasetEntry:
         patient_name = patient_name.capitalize()
         patient_file_name: str = "%s_Heart" % patient_name
-        hrvfiles_path: str = "%s/%s/%s" % (dataset_path, "electrocardiogram_data", task_name)
+        hrv_files_path: str = "%s/%s/%s" % (dataset_path, "electrocardiogram_data", task_name)
 
         dataset_entry = AnxietyPhasesDatasetEntry(
-            rr=AnxietyPhasesDatasetOper._load_dataset_entry("%s/%s" % (hrvfiles_path, patient_file_name + ".csv")),
+            rr=AnxietyPhasesDatasetOper._load_dataset_entry("%s/%s" % (hrv_files_path, patient_file_name + ".csv")),
             participant_details=AnxietyPhasesDatasetOper._load_dataset_entry(
                 "%s/%s" % (dataset_path, "participants_details.csv")),
         )
@@ -84,8 +84,8 @@ class AnxietyPhasesDatasetOper:
 
     @staticmethod
     def create_common_dataset_entry(anxiety_data_entry: AnxietyPhasesDatasetEntry, anxietyPhasesConfig : AnxietyPhasesConfigNames) -> CommonDatasetEntry:
-        genderIndex = np.where(anxiety_data_entry.participant_details[0] == 'Gender')[0][0]
-        ageIndex = np.where(anxiety_data_entry.participant_details[0] == 'Age')[0][0]
+        gender_index = np.where(anxiety_data_entry.participant_details[0] == 'Gender')[0][0]
+        age_index = np.where(anxiety_data_entry.participant_details[0] == 'Age')[0][0]
 
         start_timestamp_index = np.where(anxiety_data_entry.participant_details[0] == anxietyPhasesConfig.preparation_timestamp)[0][0]
         end_timestamp_index = np.where(anxiety_data_entry.participant_details[0] == anxietyPhasesConfig.exposure_break_timestamp)[0][0]
@@ -105,8 +105,8 @@ class AnxietyPhasesDatasetOper:
         patient_common_entry: CommonDatasetEntry = CommonDatasetEntry(
             timeline=timeline_arr,
             rr=anxiety_data_entry.rr[:, 1],
-            user_age=int(anxiety_data_entry.participant_details[1][ageIndex].split('-')[0]),
-            user_gender=np.where(anxiety_data_entry.participant_details[1][genderIndex] == 'M', 0, 1).max(),
+            user_age=int(anxiety_data_entry.participant_details[1][age_index].split('-')[0]),
+            user_gender=np.where(anxiety_data_entry.participant_details[1][gender_index] == 'M', 0, 1).max(),
             questionnaire=panic_label
         )
 
@@ -115,15 +115,15 @@ class AnxietyPhasesDatasetOper:
     # Selected task : 0 - speaking task, 1 - bug box task
     # Number users : -1 -> all
     # time_between_samples in seconds
-    def retrieve_features_and_labels(self, selected_task: int, reduce_labels: bool, number_users: int = -1,
+    def retrieve_features_and_labels(self, selected_task: int, is_mini_dataset: bool, number_users: int = -1,
                                      time_between_samples: int = 1) -> (List[CommonDatasetEntry]):
         common_dataset_entry_list: List = []
 
         task_to_read: str = ""
-        anxietyPhasesConfigNames: AnxietyPhasesConfigNames = None
+        anxiety_phases_config_names: AnxietyPhasesConfigNames = None
 
         if selected_task == 0:
-            anxietyPhasesConfigNames = AnxietyPhasesConfigNames(
+            anxiety_phases_config_names = AnxietyPhasesConfigNames(
                 preparation_label="Speech_SUDS",
                 preparation_timestamp="Speech_Relax_Timestamp",
                 exposure_label="Speech_Exposure_SUDS",
@@ -131,7 +131,7 @@ class AnxietyPhasesDatasetOper:
             )
             task_to_read = "speaking_task"
         elif selected_task == 1:
-            anxietyPhasesConfigNames = AnxietyPhasesConfigNames(
+            anxiety_phases_config_names = AnxietyPhasesConfigNames(
                 preparation_label="BugBox_Preparation_SUDS",
                 preparation_timestamp="BugBox_Relax_Timestamp",
                 exposure_label="BugBox_Exposure_SUDS",
@@ -139,14 +139,18 @@ class AnxietyPhasesDatasetOper:
             )
             task_to_read = "bug_box_task"
 
-        hrvfiles_path: str = "%s/%s/%s" % (self.dataset_path, "electrocardiogram_data", task_to_read)
-        hrvfile_names = glob.glob("%s/*csv" % hrvfiles_path)
+        if is_mini_dataset :
+            hrv_files_path: str = "%s/%s" % (
+            self.dataset_path, task_to_read)
+        else:
+            hrv_files_path: str = "%s/%s/%s" % (self.dataset_path, "electrocardiogram_data", task_to_read)
+        hrv_file_names = glob.glob("%s/*csv" % hrv_files_path)
 
         counter = 0
-        for hrvfile in hrvfile_names:
+        for hrv_file in hrv_file_names:
 
-            hrvfile_split = hrvfile.split(os.sep)
-            patient_file_name = hrvfile_split[len(hrvfile_split) - 1]
+            hrv_file_split = hrv_file.split(os.sep)
+            patient_file_name = hrv_file_split[len(hrv_file_split) - 1]
             patient_name = patient_file_name.split('_')[0]
             print(patient_file_name)
 
@@ -173,7 +177,7 @@ class AnxietyPhasesDatasetOper:
                                                         overflow_protection=False)
 
             new_dataset_entry = self.create_common_dataset_entry(patient_data,
-                                                                 anxietyPhasesConfig=anxietyPhasesConfigNames)
+                                                                 anxietyPhasesConfig=anxiety_phases_config_names)
             common_dataset_entry_list.append(new_dataset_entry)
 
             counter += 1
